@@ -26,7 +26,7 @@ ut = ''
 
 previousImages = []
 previousLoadAmounts = {}
-subreddit_current = 'aviation'
+subreddit_current = 'all'
 
 mainContentAreaWidth = 500
 actualMCA = (mainContentAreaWidth + 30)
@@ -211,7 +211,6 @@ def windowResizeThread():
 
 utils.consolelog('Starting console...')
 resizeThread = thread.start_new_thread(windowResizeThread, ())
-utils.queryImages(1, 'aviation')
 application.exec_()
 
 application_running = False
