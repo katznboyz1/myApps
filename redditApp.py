@@ -28,15 +28,16 @@ previousImages = []
 previousLoadAmounts = {}
 subreddit_current = 'all'
 
-mainContentAreaWidth = 500
+mainContentAreaWidth = 600
 actualMCA = (mainContentAreaWidth + 30)
 sidebarMinWidth = 300
 consoleWidth = 200
 
 window = QWidget()
 window.setWindowTitle('PC reddit browser')
-window.setMinimumSize((actualMCA + sidebarMinWidth + 1), 400)
+window.setMinimumSize((actualMCA), 400)
 window.setStyleSheet('QWidget{background-color:white;}')
+window.resize((actualMCA + sidebarMinWidth + consoleWidth), 500)
 
 scroll = QScrollArea(window)
 scroll.setWidgetResizable(True)
@@ -116,8 +117,8 @@ class utils():
             img_aspect_ratio = (float(pixmap.size().width()) / pixmap.size().height())
         except:
             img_aspect_ratio = 1.8
-        width = 450
-        height = (450 / img_aspect_ratio)
+        width = mainContentAreaWidth
+        height = (mainContentAreaWidth / img_aspect_ratio)
         pixmap = pixmap.scaled(width, height)
         pic.setPixmap(pixmap)
         pic.resize(width, height + 15)
@@ -198,7 +199,6 @@ QPushButton:hover{background-color:white;color:black;border:1px solid black;font
         except:
             print ('Error retriving photos. (Did I spell that right?)')
 
-window.resize(500, 500)
 window.show()
 
 def windowResizeThread():
