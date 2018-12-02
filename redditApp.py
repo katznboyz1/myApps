@@ -194,7 +194,7 @@ QPushButton:hover{background-color:white;color:black;border:1px solid black;font
             if (subreddit_current not in previousLoadAmounts):
                 utils.queryImages(amount, subreddit_current)
             else:
-                utils.queryImages((previousLoadAmounts[subreddit_current]), subreddit_current)
+                utils.queryImages((previousLoadAmounts[subreddit_current]) + amount, subreddit_current)
         except:
             print ('Error retriving photos. (Did I spell that right?)')
 
