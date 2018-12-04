@@ -22,6 +22,7 @@ QPushButton{font-family:Calibri;font-size:14px;background-color:white;color:blac
 QPushButton:hover{font-family:Calibri;font-size:14px;background-color:#ccf7ff;color:black;text-align:center;border:1px solid #83a3a8;}
 '''
 
+
 header_filebutton1 = QPushButton(window)
 header_filebutton1.setStyleSheet(headerbuttonss)
 header_filebutton1.setText('File')
