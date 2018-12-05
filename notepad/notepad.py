@@ -131,6 +131,10 @@ def buttonPressRegister(command):
             err = 'Error.'
         errorDialog.showMessage(err)
         errorDialog.setWindowTitle('Notepad - Error')
+    elif (command == ''):
+        print ('This command is a work in progress.')
+    else:
+        buttonPressRegister('error:Unknown argument for __main__.buttonPressRegister. Please notify the author about this. Command was("{}")'.format(command))
 
 def resizeThread():
     global applicationRunning
