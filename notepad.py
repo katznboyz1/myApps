@@ -25,20 +25,36 @@ filename = ''
 header_bar = QMenuBar(window)
 header_bar.resize(window.width(), 20)
 header_bar.move(0, 0)
+header_bar.setStyleSheet('''
+QAction{background-color:lightgray;color:black;font-family:Calibri;font-size:14px;}
+''') #stylesheet not working for qactions
 
 header_filebutton1 = header_bar.addMenu('File')
 header_filebutton1.setGeometry(0, 0, 40, 20)
 header_filebutton1.updateGeometry()
-header_filebutton1.addAction('New').triggered.connect(lambda: buttonPressRegister('clearTextArea'))
-header_filebutton1.addAction('Open...').triggered.connect(lambda: buttonPressRegister('openNew'))
-header_filebutton1.addAction('Save').triggered.connect(lambda: buttonPressRegister('saveFile'))
+shortcutrequire1 = header_filebutton1.addAction('New')
+shortcutrequire1.triggered.connect(lambda: buttonPressRegister('clearTextArea'))
+shortcutrequire1.setShortcut('Ctrl+N')
+shortcutrequire2 = header_filebutton1.addAction('Open...')
+shortcutrequire2.triggered.connect(lambda: buttonPressRegister('openNew'))
+shortcutrequire2.setShortcut('Ctrl+O')
+shortcutrequire3 = header_filebutton1.addAction('Save')
+shortcutrequire3.triggered.connect(lambda: buttonPressRegister('saveFile'))
+shortcutrequire3.setShortcut('Ctrl+S')
 header_filebutton1.addAction('Save as...').triggered.connect(lambda: buttonPressRegister('saveFileAs'))
+header_filebutton1.addAction('Page Setup').triggered.connect(lambda: buttonPressRegister(''))
+shortcutrequire4 = header_filebutton1.addAction('Print')
+shortcutrequire4.triggered.connect(lambda: buttonPressRegister(''))
+shortcutrequire4.setShortcut('Ctrl+P')
+header_filebutton1.addAction('Exit').triggered.connect(lambda: exit())
 header_filebutton1.setStyleSheet(headermenuss)
 
 header_filebutton2 = header_bar.addMenu('Edit')
 header_filebutton2.setGeometry((header_filebutton1.width() + header_filebutton1.x()), 0, 40, 20)
 header_filebutton2.updateGeometry()
-header_filebutton2.addAction('Undo').triggered.connect(lambda: buttonPressRegister(''))
+shortcutrequire5 = header_filebutton2.addAction('Undo')
+shortcutrequire5.triggered.connect(lambda: buttonPressRegister(''))
+shortcutrequire5.setShortcut('Ctrl+Z')
 header_filebutton2.addAction('Cut').triggered.connect(lambda: buttonPressRegister(''))
 header_filebutton2.addAction('Copy').triggered.connect(lambda: buttonPressRegister(''))
 header_filebutton2.addAction('Paste').triggered.connect(lambda: buttonPressRegister(''))
@@ -79,24 +95,41 @@ def buttonPressRegister(command):
     commmand = str(command)
     if (command == 'clearTextArea'):
         textEntry.setPlainText('')
+        filename = ''
+        window.setWindowTitle('Untitled - Notepad')
     elif (command == 'openNew'):
-        _filename = QFileDialog.getOpenFileName()[0]
-        file = open(_filename, 'r')
-        textEntry.setPlainText(str(file.read()))
-        file.close()
-        window.setWindowTitle(_filename)
+        try:
+            _filename = QFileDialog.getOpenFileName()[0]
+            file = open(_filename, 'r')
+            textEntry.setPlainText(str(file.read()))
+            file.close()
+            window.setWindowTitle(_filename)
+            filename = _filename
+        except FileNotFoundError as err:
+            buttonPressRegister('error:File was not found.')
     elif (command == 'saveFile'):
         if (filename == ''):
             buttonPressRegister('saveFileAs')
         else:
-            file = open(filename, 'w')
-            file.write(str(textEntry.toPlainText()))
-            file.close()
+            try:
+                file = open(filename, 'w')
+                file.write(str(textEntry.toPlainText()))
+                file.close()
+            except FileNotFoundError as err:
+                buttonPressRegister('error:File was not found.')
     elif (command == 'saveFileAs'):
-        _filename = QFileDialog.getOpenFileName()[0]
+        _filename = QFileDialog.getSaveFileName()[0]
         filename = _filename
         buttonPressRegister('saveFile')
         window.setWindowTitle(filename)
+    elif (command.split(':')[0] == 'error'):
+        errorDialog = QErrorMessage(window)
+        if (command.count(':') == 1):
+            err = command.split(':')[1]
+        else:
+            err = 'Error.'
+        errorDialog.showMessage(err)
+        errorDialog.setWindowTitle('Notepad - Error')
 
 def resizeThread():
     global applicationRunning
