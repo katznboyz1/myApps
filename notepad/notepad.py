@@ -82,7 +82,7 @@ QPushButton:hover{font-family:Calibri;font-size:14px;background-color:#ccf7ff;co
 
 qass = '''
 QAction{background-color:lightgray;color:black;font-family:Calibri;font-size:14px;}
-'''
+''' #does not work for individual buttons
 
 filename = ''
 
@@ -112,6 +112,7 @@ header_filebutton1.addAction('Exit').triggered.connect(lambda: exit())
 header_filebutton1.setStyleSheet(headermenuss)
 
 header_filebutton2 = header_bar.addMenu('Edit')
+header_filebutton2.setStyleSheet(qass)
 header_filebutton2.setGeometry((header_filebutton1.width() + header_filebutton1.x()), 0, 40, 20)
 header_filebutton2.updateGeometry()
 shortcutrequire5 = header_filebutton2.addAction('Undo')
@@ -150,6 +151,7 @@ shortcutrequire15.setShortcut('F5')
 header_filebutton2.setStyleSheet(headermenuss)
 
 header_filebutton3 = header_bar.addMenu('Format')
+header_filebutton3.setStyleSheet(qass)
 header_filebutton3.setGeometry((header_filebutton2.width() + header_filebutton2.x()), 0, 60, 20)
 header_filebutton3.updateGeometry()
 header_filebutton3.addAction('Word Wrap').triggered.connect(lambda: buttonPressRegister(''))
@@ -157,12 +159,14 @@ header_filebutton3.addAction('Font...').triggered.connect(lambda: buttonPressReg
 header_filebutton3.setStyleSheet(headermenuss)
 
 header_filebutton4 = header_bar.addMenu('View')
+header_filebutton4.setStyleSheet(qass)
 header_filebutton4.setGeometry((header_filebutton3.width() + header_filebutton3.x()), 0, 60, 20)
 header_filebutton4.updateGeometry()
 header_filebutton4.addAction('Status Bar').triggered.connect(lambda: buttonPressRegister(''))
 header_filebutton4.setStyleSheet(headermenuss)
 
 header_filebutton5 = header_bar.addMenu('Help')
+header_filebutton5.setStyleSheet(qass)
 header_filebutton5.setGeometry((header_filebutton4.width() + header_filebutton4.x()), 0, 60, 20)
 header_filebutton5.updateGeometry()
 header_filebutton5.addAction('View Help').triggered.connect(lambda: buttonPressRegister('viewHelp'))
