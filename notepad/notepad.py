@@ -2,6 +2,7 @@ import PyQt5 as PyQt5
 from PyQt5.QtWidgets import *
 import sys as sys
 import _thread as thread
+import os as os
 
 applicationRunning = True
 
@@ -82,7 +83,7 @@ header_filebutton4.setStyleSheet(headermenuss)
 header_filebutton5 = header_bar.addMenu('Help')
 header_filebutton5.setGeometry((header_filebutton4.width() + header_filebutton4.x()), 0, 60, 20)
 header_filebutton5.updateGeometry()
-header_filebutton5.addAction('View Help').triggered.connect(lambda: buttonPressRegister(''))
+header_filebutton5.addAction('View Help').triggered.connect(lambda: buttonPressRegister('viewHelp'))
 header_filebutton5.addAction('About Notepad').triggered.connect(lambda: buttonPressRegister(''))
 header_filebutton5.setStyleSheet(headermenuss)
 
@@ -107,7 +108,9 @@ def buttonPressRegister(command):
             window.setWindowTitle(_filename)
             filename = _filename
         except FileNotFoundError as err:
-            buttonPressRegister('error:File was not found.')
+            buttonPressRegister('error:File was not found. (FileNotFoundError)')
+        except UnicodeDecodeError as err:
+            buttonPressRegister('error:Notepad cant open images. (UnicodeDecodeError)')
     elif (command == 'saveFile'):
         if (filename == ''):
             buttonPressRegister('saveFileAs')
@@ -117,7 +120,7 @@ def buttonPressRegister(command):
                 file.write(str(textEntry.toPlainText()))
                 file.close()
             except FileNotFoundError as err:
-                buttonPressRegister('error:File was not found.')
+                buttonPressRegister('error:File was not found. (FileNotFoundError)')
     elif (command == 'saveFileAs'):
         _filename = QFileDialog.getSaveFileName()[0]
         filename = _filename
@@ -131,6 +134,11 @@ def buttonPressRegister(command):
             err = 'Error.'
         errorDialog.showMessage(err)
         errorDialog.setWindowTitle('Notepad - Error')
+    elif (command == 'viewHelp'):
+        try:
+            os.startfile('help.html')
+        except FileNotFoundError as err:
+            buttonPressRegister('error:Help file not found. (FileNotFoundError)')
     elif (command == ''):
         print ('This command is a work in progress.')
     else:
