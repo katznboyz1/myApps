@@ -4,6 +4,61 @@ import sys as sys
 import _thread as thread
 import os as os
 
+def buttonPressRegister(command):
+    global filename
+    commmand = str(command)
+    if (command == 'clearTextArea'):
+        textEntry.setPlainText('')
+        filename = ''
+        window.setWindowTitle('Untitled - Notepad')
+    elif (command == 'openNew'):
+        try:
+            _filename = QFileDialog.getOpenFileName()[0]
+            file = open(_filename, 'r')
+            textEntry.setPlainText(str(file.read()))
+            file.close()
+            window.setWindowTitle(_filename)
+            filename = _filename
+        except FileNotFoundError as err:
+            buttonPressRegister('error:File was not found. (FileNotFoundError)')
+        except UnicodeDecodeError as err:
+            buttonPressRegister('error:Notepad cant open images. (UnicodeDecodeError)')
+    elif (command == 'saveFile'):
+        if (filename == ''):
+            buttonPressRegister('saveFileAs')
+        else:
+            try:
+                file = open(filename, 'w')
+                file.write(str(textEntry.toPlainText()))
+                file.close()
+            except FileNotFoundError as err:
+                buttonPressRegister('error:File was not found. (FileNotFoundError)')
+    elif (command == 'saveFileAs'):
+        _filename = QFileDialog.getSaveFileName()[0]
+        filename = _filename
+        if (filename == ''):
+            pass
+        else:
+            buttonPressRegister('saveFile')
+            window.setWindowTitle(filename)
+    elif (command.split(':')[0] == 'error'):
+        errorDialog = QErrorMessage(window)
+        if (command.count(':') == 1):
+            err = command.split(':')[1]
+        else:
+            err = 'Error.'
+        errorDialog.showMessage(err)
+        errorDialog.setWindowTitle('Notepad - Error')
+    elif (command == 'viewHelp'):
+        try:
+            os.startfile('help.html')
+        except FileNotFoundError as err:
+            buttonPressRegister('error:Help file not found. (FileNotFoundError)')
+    elif (command == ''):
+        print ('This command is a work in progress.')
+    else:
+        buttonPressRegister('error:Unknown argument for __main__.buttonPressRegister. Please notify the author about this. Command was("{}")'.format(command))
+
 applicationRunning = True
 
 application = QApplication(sys.argv)
@@ -15,7 +70,10 @@ window.setWindowTitle('Untitled - Notepad')
 window.setStyleSheet('QWidget{background-color:white;}')
 window.setMinimumSize(400, 200)
 window.resize((screen.size().width() / 2), (screen.size().height() / 2))
-window.setWindowIcon(PyQt5.QtGui.QIcon('icon.png'))
+try:
+    window.setWindowIcon(PyQt5.QtGui.QIcon('icon.png'))
+except:
+    buttonPressRegister('error:Application icon not found. (./icon.png)')
 
 headermenuss = '''
 QPushButton{font-family:Calibri;font-size:14px;background-color:white;color:black;text-align:center;border:0px;}
@@ -91,58 +149,6 @@ textEntry = QPlainTextEdit(window)
 textEntry.move(0, header_filebutton1.height())
 textEntry.resize(window.width(), (window.height() - header_filebutton1.height()))
 textEntry.setStyleSheet('QPlainTextEdit{background-color:white;border-top:2px solid #c2c2c2;font-family:Consolas;font-size:15px;}')
-
-def buttonPressRegister(command):
-    global filename
-    commmand = str(command)
-    if (command == 'clearTextArea'):
-        textEntry.setPlainText('')
-        filename = ''
-        window.setWindowTitle('Untitled - Notepad')
-    elif (command == 'openNew'):
-        try:
-            _filename = QFileDialog.getOpenFileName()[0]
-            file = open(_filename, 'r')
-            textEntry.setPlainText(str(file.read()))
-            file.close()
-            window.setWindowTitle(_filename)
-            filename = _filename
-        except FileNotFoundError as err:
-            buttonPressRegister('error:File was not found. (FileNotFoundError)')
-        except UnicodeDecodeError as err:
-            buttonPressRegister('error:Notepad cant open images. (UnicodeDecodeError)')
-    elif (command == 'saveFile'):
-        if (filename == ''):
-            buttonPressRegister('saveFileAs')
-        else:
-            try:
-                file = open(filename, 'w')
-                file.write(str(textEntry.toPlainText()))
-                file.close()
-            except FileNotFoundError as err:
-                buttonPressRegister('error:File was not found. (FileNotFoundError)')
-    elif (command == 'saveFileAs'):
-        _filename = QFileDialog.getSaveFileName()[0]
-        filename = _filename
-        buttonPressRegister('saveFile')
-        window.setWindowTitle(filename)
-    elif (command.split(':')[0] == 'error'):
-        errorDialog = QErrorMessage(window)
-        if (command.count(':') == 1):
-            err = command.split(':')[1]
-        else:
-            err = 'Error.'
-        errorDialog.showMessage(err)
-        errorDialog.setWindowTitle('Notepad - Error')
-    elif (command == 'viewHelp'):
-        try:
-            os.startfile('help.html')
-        except FileNotFoundError as err:
-            buttonPressRegister('error:Help file not found. (FileNotFoundError)')
-    elif (command == ''):
-        print ('This command is a work in progress.')
-    else:
-        buttonPressRegister('error:Unknown argument for __main__.buttonPressRegister. Please notify the author about this. Command was("{}")'.format(command))
 
 def resizeThread():
     global applicationRunning
