@@ -1,5 +1,3 @@
-#Buttons dont work yet
-
 import PyQt5 as PyQt5
 from PyQt5.QtWidgets import *
 import sys as sys
