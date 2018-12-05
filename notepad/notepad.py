@@ -80,16 +80,18 @@ QPushButton{font-family:Calibri;font-size:14px;background-color:white;color:blac
 QPushButton:hover{font-family:Calibri;font-size:14px;background-color:#ccf7ff;color:black;text-align:center;border:1px solid #83a3a8;}
 '''
 
+qass = '''
+QAction{background-color:lightgray;color:black;font-family:Calibri;font-size:14px;}
+'''
+
 filename = ''
 
 header_bar = QMenuBar(window)
 header_bar.resize(window.width(), 20)
 header_bar.move(0, 0)
-header_bar.setStyleSheet('''
-QAction{background-color:lightgray;color:black;font-family:Calibri;font-size:14px;}
-''') #stylesheet not working for QAction() child widgets
 
 header_filebutton1 = header_bar.addMenu('File')
+header_filebutton1.setStyleSheet(qass)
 header_filebutton1.setGeometry(0, 0, 40, 20)
 header_filebutton1.updateGeometry()
 shortcutrequire1 = header_filebutton1.addAction('New')
@@ -115,14 +117,36 @@ header_filebutton2.updateGeometry()
 shortcutrequire5 = header_filebutton2.addAction('Undo')
 shortcutrequire5.triggered.connect(lambda: buttonPressRegister(''))
 shortcutrequire5.setShortcut('Ctrl+Z')
-header_filebutton2.addAction('Cut').triggered.connect(lambda: buttonPressRegister(''))
-header_filebutton2.addAction('Copy').triggered.connect(lambda: buttonPressRegister(''))
-header_filebutton2.addAction('Paste').triggered.connect(lambda: buttonPressRegister(''))
-header_filebutton2.addAction('Delete').triggered.connect(lambda: buttonPressRegister(''))
-header_filebutton2.addAction('Find...').triggered.connect(lambda: buttonPressRegister(''))
-header_filebutton2.addAction('Find Next').triggered.connect(lambda: buttonPressRegister(''))
-header_filebutton2.addAction('Replace...').triggered.connect(lambda: buttonPressRegister(''))
-header_filebutton2.addAction('Go To...').triggered.connect(lambda: buttonPressRegister(''))
+shortcutrequire6 = header_filebutton2.addAction('Cut')
+shortcutrequire6.triggered.connect(lambda: buttonPressRegister(''))
+shortcutrequire6.setShortcut('Ctrl+X')
+shortcutrequire7 = header_filebutton2.addAction('Copy')
+shortcutrequire7.triggered.connect(lambda: buttonPressRegister(''))
+shortcutrequire7.setShortcut('Ctrl+C')
+shortcutrequire8 = header_filebutton2.addAction('Paste')
+shortcutrequire8.triggered.connect(lambda: buttonPressRegister(''))
+shortcutrequire8.setShortcut('Ctrl+V')
+shortcutrequire9 = header_filebutton2.addAction('Delete')
+shortcutrequire9.triggered.connect(lambda: buttonPressRegister(''))
+shortcutrequire9.setShortcut('Del')
+shortcutrequire10 = header_filebutton2.addAction('Find...')
+shortcutrequire10.triggered.connect(lambda: buttonPressRegister(''))
+shortcutrequire10.setShortcut('Ctrl+F')
+shortcutrequire11 = header_filebutton2.addAction('Find Next')
+shortcutrequire11.triggered.connect(lambda: buttonPressRegister(''))
+shortcutrequire11.setShortcut('F3')
+shortcutrequire12 = header_filebutton2.addAction('Replace...')
+shortcutrequire12.triggered.connect(lambda: buttonPressRegister(''))
+shortcutrequire12.setShortcut('Ctrl+H')
+shortcutrequire13 = header_filebutton2.addAction('Go To...')
+shortcutrequire13.triggered.connect(lambda: buttonPressRegister(''))
+shortcutrequire13.setShortcut('Ctrl+G')
+shortcutrequire14 = header_filebutton2.addAction('Select All')
+shortcutrequire14.triggered.connect(lambda: buttonPressRegister(''))
+shortcutrequire14.setShortcut('Ctrl+A')
+shortcutrequire15 = header_filebutton2.addAction('Time/Date')
+shortcutrequire15.triggered.connect(lambda: buttonPressRegister(''))
+shortcutrequire15.setShortcut('F5')
 header_filebutton2.setStyleSheet(headermenuss)
 
 header_filebutton3 = header_bar.addMenu('Format')
