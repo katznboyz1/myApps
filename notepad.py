@@ -17,11 +17,6 @@ window.setStyleSheet('QWidget{background-color:white;}')
 window.setMinimumSize(400, 200)
 window.resize((screen.size().width() / 2), (screen.size().height() / 2))
 
-headerbuttonss = '''
-QPushButton{font-family:Calibri;font-size:14px;background-color:white;color:black;text-align:center;border:0px;}
-QPushButton:hover{font-family:Calibri;font-size:14px;background-color:#ccf7ff;color:black;text-align:center;border:1px solid #83a3a8;}
-'''
-
 headermenuss = '''
 QPushButton{font-family:Calibri;font-size:14px;background-color:white;color:black;text-align:center;border:0px;}
 QPushButton:hover{font-family:Calibri;font-size:14px;background-color:#ccf7ff;color:black;text-align:center;border:1px solid #83a3a8;}
