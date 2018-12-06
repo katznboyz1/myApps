@@ -6,8 +6,8 @@ import sys as sys
 import _thread as thread
 import os as os
 
-def event(eventType, debug = True):
-    global applicationRunning, pencolor, lineWidth, backgroundColor
+def event(eventType, debug = True): #disable <debug> for release
+    global applicationRunning, pencolor, lineWidth, backgroundColor, renderView, textSize
     eventType = str(eventType)
     if (debug):
         print (eventType)
@@ -17,12 +17,18 @@ def event(eventType, debug = True):
     elif (eventType.split(':')[0] == 'setcolor'):
         pencolor = str(eventType.split(':')[1])
     elif (eventType == 'canvasClear'):
-        print ('This doesnt work yet')
+        a = QGraphicsRectItem(PyQt5.QtCore.QRectF((0 - (window.width() / 2)), (0 - (window.height() / 2)), window.width() + 50, window.height() + 20))
+        a.setBrush(eval('PyQt5.QtCore.Qt.{}'.format(backgroundColor)))
+        a.setPen(eval('PyQt5.QtCore.Qt.{}'.format(backgroundColor)))
+        renderView.scene().addItem(a)
+        renderView.setStyleSheet('QGraphicsView{background-color:' + backgroundColor + ';}')
     elif (eventType.split(':')[0] == 'setpw'):
         lineWidth = int(eventType.split(':')[1])
     elif (eventType.split(':')[0] == 'setbgndcolor'):
         backgroundColor = str(eventType.split(':')[1])
         renderView.setStyleSheet('QGraphicsView{background-color:' + backgroundColor + ';}')
+    elif (eventType.split(':')[0] == 'setts'):
+        textSize = int(eventType.split(':')[1])
 
 applicationRunning = True
 
@@ -92,11 +98,40 @@ window_header_bar_widgets_edit_new_bgndcolor.addAction('Purple').triggered.conne
 window_header_bar_widgets_edit_new_bgndcolor.addAction('Orange').triggered.connect(lambda: event('setbgndcolor:orange'))
 window_header_bar_widgets_edit_new_bgndcolor.addAction('Yellow').triggered.connect(lambda: event('setbgndcolor:yellow'))
 
+window_header_bar_widgets_edit_new_text = window_header_bar_widgets_edit.addMenu('Text')
+
+window_header_bar_widgets_edit_new_textsize = window_header_bar_widgets_edit_new_text.addMenu('Text Size')
+
+window_header_bar_widgets_edit_new_textsize.addAction('10').triggered.connect(lambda: event('setts:10'))
+window_header_bar_widgets_edit_new_textsize.addAction('13').triggered.connect(lambda: event('setts:13'))
+window_header_bar_widgets_edit_new_textsize.addAction('19').triggered.connect(lambda: event('setts:19'))
+window_header_bar_widgets_edit_new_textsize.addAction('25').triggered.connect(lambda: event('setts:25'))
+window_header_bar_widgets_edit_new_textsize.addAction('28').triggered.connect(lambda: event('setts:28'))
+window_header_bar_widgets_edit_new_textsize.addAction('31').triggered.connect(lambda: event('setts:31'))
+window_header_bar_widgets_edit_new_textsize.addAction('34').triggered.connect(lambda: event('setts:34'))
+window_header_bar_widgets_edit_new_textsize.addAction('37').triggered.connect(lambda: event('setts:37'))
+window_header_bar_widgets_edit_new_textsize.addAction('40').triggered.connect(lambda: event('setts:40'))
+
+window_header_bar_widgets_edit_new_textcolor = window_header_bar_widgets_edit_new_text.addMenu('Text Color')
+
+window_header_bar_widgets_edit_new_textcolor.addAction('Black').triggered.connect(lambda: event('setcolor:black'))
+window_header_bar_widgets_edit_new_textcolor.addAction('Gray').triggered.connect(lambda: event('setcolor:gray'))
+window_header_bar_widgets_edit_new_textcolor.addAction('White').triggered.connect(lambda: event('setcolor:white'))
+window_header_bar_widgets_edit_new_textcolor.addAction('Blue').triggered.connect(lambda: event('setcolor:blue'))
+window_header_bar_widgets_edit_new_textcolor.addAction('Red').triggered.connect(lambda: event('setcolor:red'))
+window_header_bar_widgets_edit_new_textcolor.addAction('Green').triggered.connect(lambda: event('setcolor:green'))
+
+window_header_bar_widgets_edit_new_textfont = window_header_bar_widgets_edit_new_text.addMenu('Font')
+
+window_header_bar_widgets_edit_new_text.addAction('Place Text').triggered.connect(lambda: event('placeText'))
 
 
 pencolor = 'black'
 lineWidth = 1
 backgroundColor = 'white'
+textFont = 'Calibri'
+textSize = 20
+textColor = 'black'
 
 def paintEvent(x1, y1, x2, y2):
     global renderView, pencolor, lineWidth
