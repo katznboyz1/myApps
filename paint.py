@@ -7,7 +7,7 @@ import _thread as thread
 import os as os
 
 def event(eventType, debug = True): #disable <debug> for release
-    global applicationRunning, pencolor, lineWidth, backgroundColor, renderView, textSize
+    global applicationRunning, pencolor, lineWidth, backgroundColor, renderView, textSize, textColor, textFont
     eventType = str(eventType)
     if (debug):
         print (eventType)
@@ -29,6 +29,10 @@ def event(eventType, debug = True): #disable <debug> for release
         renderView.setStyleSheet('QGraphicsView{background-color:' + backgroundColor + ';}')
     elif (eventType.split(':')[0] == 'setts'):
         textSize = int(eventType.split(':')[1])
+    elif (eventType.split(':')[0] == 'settextcolor'):
+        textColor = str(eventType.split(':')[1])
+    elif (eventType.split(':')[0] == 'settextfont'):
+        textFont = str(eventType.split(':')[1])
 
 applicationRunning = True
 
@@ -114,14 +118,19 @@ window_header_bar_widgets_edit_new_textsize.addAction('40').triggered.connect(la
 
 window_header_bar_widgets_edit_new_textcolor = window_header_bar_widgets_edit_new_text.addMenu('Text Color')
 
-window_header_bar_widgets_edit_new_textcolor.addAction('Black').triggered.connect(lambda: event('setcolor:black'))
-window_header_bar_widgets_edit_new_textcolor.addAction('Gray').triggered.connect(lambda: event('setcolor:gray'))
-window_header_bar_widgets_edit_new_textcolor.addAction('White').triggered.connect(lambda: event('setcolor:white'))
-window_header_bar_widgets_edit_new_textcolor.addAction('Blue').triggered.connect(lambda: event('setcolor:blue'))
-window_header_bar_widgets_edit_new_textcolor.addAction('Red').triggered.connect(lambda: event('setcolor:red'))
-window_header_bar_widgets_edit_new_textcolor.addAction('Green').triggered.connect(lambda: event('setcolor:green'))
+window_header_bar_widgets_edit_new_textcolor.addAction('Black').triggered.connect(lambda: event('settextcolor:black'))
+window_header_bar_widgets_edit_new_textcolor.addAction('Gray').triggered.connect(lambda: event('settextcolor:gray'))
+window_header_bar_widgets_edit_new_textcolor.addAction('White').triggered.connect(lambda: event('settextcolor:white'))
+window_header_bar_widgets_edit_new_textcolor.addAction('Blue').triggered.connect(lambda: event('settextcolor:blue'))
+window_header_bar_widgets_edit_new_textcolor.addAction('Red').triggered.connect(lambda: event('settextcolor:red'))
+window_header_bar_widgets_edit_new_textcolor.addAction('Green').triggered.connect(lambda: event('settextcolor:green'))
 
 window_header_bar_widgets_edit_new_textfont = window_header_bar_widgets_edit_new_text.addMenu('Font')
+
+window_header_bar_widgets_edit_new_textfont.addAction('Courier').triggered.connect(lambda: event('settextfont:Courier'))
+window_header_bar_widgets_edit_new_textfont.addAction('Calibri').triggered.connect(lambda: event('settextfont:Calibri'))
+window_header_bar_widgets_edit_new_textfont.addAction('Consolas').triggered.connect(lambda: event('settextfont:Consolas'))
+window_header_bar_widgets_edit_new_textfont.addAction('Comic Sans MS').triggered.connect(lambda: event('settextfont:Comic Sans MS')) #let us hope this is never used
 
 window_header_bar_widgets_edit_new_text.addAction('Place Text').triggered.connect(lambda: event('placeText'))
 
