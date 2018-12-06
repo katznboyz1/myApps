@@ -7,7 +7,7 @@ import _thread as thread
 import os as os
 
 def event(eventType, debug = True):
-    global applicationRunning, pencolor, lineWidth
+    global applicationRunning, pencolor, lineWidth, backgroundColor
     eventType = str(eventType)
     if (debug):
         print (eventType)
@@ -20,6 +20,9 @@ def event(eventType, debug = True):
         print ('This doesnt work yet')
     elif (eventType.split(':')[0] == 'setpw'):
         lineWidth = int(eventType.split(':')[1])
+    elif (eventType.split(':')[0] == 'setbgndcolor'):
+        backgroundColor = str(eventType.split(':')[1])
+        renderView.setStyleSheet('QGraphicsView{background-color:' + backgroundColor + ';}')
 
 applicationRunning = True
 
@@ -62,8 +65,7 @@ window_header_bar_widgets_edit_new_brush_color.addAction('Blue').triggered.conne
 window_header_bar_widgets_edit_new_brush_color.addAction('Red').triggered.connect(lambda: event('setcolor:red'))
 window_header_bar_widgets_edit_new_brush_color.addAction('Green').triggered.connect(lambda: event('setcolor:green'))
 
-window_header_bar_widgets_edit_new_pensize = window_header_bar_widgets_edit.addMenu('Pen Size')
-
+window_header_bar_widgets_edit_new_pensize = window_header_bar_widgets_edit_new_brush.addMenu('Brush Size')
 window_header_bar_widgets_edit_new_pensize.addAction('1px').triggered.connect(lambda: event('setpw:1'))
 window_header_bar_widgets_edit_new_pensize.addAction('4px').triggered.connect(lambda: event('setpw:4'))
 window_header_bar_widgets_edit_new_pensize.addAction('7px').triggered.connect(lambda: event('setpw:7'))
@@ -78,9 +80,23 @@ window_header_bar_widgets_edit_new_pensize.addAction('34px').triggered.connect(l
 window_header_bar_widgets_edit_new_pensize.addAction('37px').triggered.connect(lambda: event('setpw:37'))
 window_header_bar_widgets_edit_new_pensize.addAction('40px').triggered.connect(lambda: event('setpw:40'))
 
+window_header_bar_widgets_edit_new_bgndcolor = window_header_bar_widgets_edit.addMenu('Background Color')
+
+window_header_bar_widgets_edit_new_bgndcolor.addAction('Black').triggered.connect(lambda: event('setbgndcolor:black'))
+window_header_bar_widgets_edit_new_bgndcolor.addAction('Gray').triggered.connect(lambda: event('setbgndcolor:gray'))
+window_header_bar_widgets_edit_new_bgndcolor.addAction('White').triggered.connect(lambda: event('setbgndcolor:white'))
+window_header_bar_widgets_edit_new_bgndcolor.addAction('Blue').triggered.connect(lambda: event('setbgndcolor:blue'))
+window_header_bar_widgets_edit_new_bgndcolor.addAction('Red').triggered.connect(lambda: event('setbgndcolor:red'))
+window_header_bar_widgets_edit_new_bgndcolor.addAction('Green').triggered.connect(lambda: event('setbgndcolor:green'))
+window_header_bar_widgets_edit_new_bgndcolor.addAction('Purple').triggered.connect(lambda: event('setbgndcolor:purple'))
+window_header_bar_widgets_edit_new_bgndcolor.addAction('Orange').triggered.connect(lambda: event('setbgndcolor:orange'))
+window_header_bar_widgets_edit_new_bgndcolor.addAction('Yellow').triggered.connect(lambda: event('setbgndcolor:yellow'))
+
+
 
 pencolor = 'black'
 lineWidth = 1
+backgroundColor = 'white'
 
 def paintEvent(x1, y1, x2, y2):
     global renderView, pencolor, lineWidth
@@ -100,6 +116,7 @@ renderView = QGraphicsView(window)
 renderView.move(0, window_header_bar.height())
 renderView.setScene(QGraphicsScene(window))
 renderView.setSceneRect(PyQt5.QtCore.QRectF(renderView.viewport().rect()))
+renderView.setStyleSheet('QGraphicsView{background-color:' + backgroundColor + ';}')
 
 mousePos = False
 mouseXY = ''
