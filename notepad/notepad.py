@@ -81,8 +81,8 @@ QPushButton:hover{font-family:Calibri;font-size:14px;background-color:#ccf7ff;co
 '''
 
 qass = '''
-QAction{background-color:lightgray;color:black;font-family:Calibri;font-size:14px;}
-''' #does not work for individual buttons
+QMenu{background-color:#ededed;border:1px solid #636361;color:black}
+''' #this isnt working for the background color or border
 
 filename = ''
 
@@ -93,7 +93,6 @@ header_bar.move(0, 0)
 header_filebutton1 = header_bar.addMenu('File')
 header_filebutton1.setStyleSheet(qass)
 header_filebutton1.setGeometry(0, 0, 40, 20)
-header_filebutton1.updateGeometry()
 shortcutrequire1 = header_filebutton1.addAction('New')
 shortcutrequire1.triggered.connect(lambda: buttonPressRegister('clearTextArea'))
 shortcutrequire1.setShortcut('Ctrl+N')
