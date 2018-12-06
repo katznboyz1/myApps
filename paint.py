@@ -18,11 +18,7 @@ def event(eventType, debug = True): #disable <debug> for release
         elif (eventType.split(':')[0] == 'setcolor'):
             pencolor = str(eventType.split(':')[1])
         elif (eventType == 'canvasClear'):
-            a = QGraphicsRectItem(PyQt5.QtCore.QRectF((0 - (window.width() / 2)), (0 - (window.height() / 2)), window.width() + 50, window.height() + 20))
-            a.setBrush(eval('PyQt5.QtCore.Qt.{}'.format(backgroundColor)))
-            a.setPen(eval('PyQt5.QtCore.Qt.{}'.format(backgroundColor)))
-            renderView.scene().addItem(a)
-            renderView.setStyleSheet('QGraphicsView{background-color:' + backgroundColor + ';}')
+            event('error\u2588Function not functional.')
         elif (eventType.split(':')[0] == 'setpw'):
             lineWidth = int(eventType.split(':')[1])
         elif (eventType.split(':')[0] == 'setbgndcolor'):
