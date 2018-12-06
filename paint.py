@@ -46,8 +46,11 @@ def event(eventType, debug = True): #disable <debug> for release
                 width = (renderView.width() / 3)
                 height = (width / img_aspect_ratio)
                 pixmap = pixmap.scaled(width, height)
-                pixmap.transformed(PyQt5.QtGui.QTransform(-(width / 2), -(height / 2)))
+                transform = PyQt5.QtGui.QTransform()
+                transform.translate(-(renderView.width() / 2), -(renderView.height() / 2))
+                pixmap.transformed(transform)
                 renderView.scene().addPixmap(pixmap)
+                #doesnt translate, but still renders ;-;
     except Exception as err:
         event('error\u2588{}'.format(err))
 
