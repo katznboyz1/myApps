@@ -9,30 +9,47 @@ import os as os
 def event(eventType, debug = True): #disable <debug> for release
     global applicationRunning, pencolor, lineWidth, backgroundColor, renderView, textSize, textColor, textFont
     eventType = str(eventType)
-    if (debug):
-        print (eventType)
-    if (eventType == 'exitProgram'):
-        applicationRunning = False
-        exit()
-    elif (eventType.split(':')[0] == 'setcolor'):
-        pencolor = str(eventType.split(':')[1])
-    elif (eventType == 'canvasClear'):
-        a = QGraphicsRectItem(PyQt5.QtCore.QRectF((0 - (window.width() / 2)), (0 - (window.height() / 2)), window.width() + 50, window.height() + 20))
-        a.setBrush(eval('PyQt5.QtCore.Qt.{}'.format(backgroundColor)))
-        a.setPen(eval('PyQt5.QtCore.Qt.{}'.format(backgroundColor)))
-        renderView.scene().addItem(a)
-        renderView.setStyleSheet('QGraphicsView{background-color:' + backgroundColor + ';}')
-    elif (eventType.split(':')[0] == 'setpw'):
-        lineWidth = int(eventType.split(':')[1])
-    elif (eventType.split(':')[0] == 'setbgndcolor'):
-        backgroundColor = str(eventType.split(':')[1])
-        renderView.setStyleSheet('QGraphicsView{background-color:' + backgroundColor + ';}')
-    elif (eventType.split(':')[0] == 'setts'):
-        textSize = int(eventType.split(':')[1])
-    elif (eventType.split(':')[0] == 'settextcolor'):
-        textColor = str(eventType.split(':')[1])
-    elif (eventType.split(':')[0] == 'settextfont'):
-        textFont = str(eventType.split(':')[1])
+    try:
+        if (debug):
+            print (eventType)
+        if (eventType == 'exitProgram'):
+            applicationRunning = False
+            exit()
+        elif (eventType.split(':')[0] == 'setcolor'):
+            pencolor = str(eventType.split(':')[1])
+        elif (eventType == 'canvasClear'):
+            a = QGraphicsRectItem(PyQt5.QtCore.QRectF((0 - (window.width() / 2)), (0 - (window.height() / 2)), window.width() + 50, window.height() + 20))
+            a.setBrush(eval('PyQt5.QtCore.Qt.{}'.format(backgroundColor)))
+            a.setPen(eval('PyQt5.QtCore.Qt.{}'.format(backgroundColor)))
+            renderView.scene().addItem(a)
+            renderView.setStyleSheet('QGraphicsView{background-color:' + backgroundColor + ';}')
+        elif (eventType.split(':')[0] == 'setpw'):
+            lineWidth = int(eventType.split(':')[1])
+        elif (eventType.split(':')[0] == 'setbgndcolor'):
+            backgroundColor = str(eventType.split(':')[1])
+            renderView.setStyleSheet('QGraphicsView{background-color:' + backgroundColor + ';}')
+        elif (eventType.split(':')[0] == 'setts'):
+            textSize = int(eventType.split(':')[1])
+        elif (eventType.split(':')[0] == 'settextcolor'):
+            textColor = str(eventType.split(':')[1])
+        elif (eventType.split(':')[0] == 'settextfont'):
+            textFont = str(eventType.split(':')[1])
+        elif (eventType.split('\u2588')[0] == 'error'):
+            errorDialog = QErrorMessage(window)
+            errorDialog.showMessage(str(eventType.split('\u2588')[1]))
+            errorDialog.setWindowTitle('Paint - Error')
+        elif (eventType == 'canvasOpenImage'):
+            image = QFileDialog.getOpenFileName()[0]
+            if (image != ''):
+                pixmap = PyQt5.QtGui.QPixmap(image)
+                img_aspect_ratio = (float(pixmap.size().width()) / pixmap.size().height())
+                width = (renderView.width() / 3)
+                height = (width / img_aspect_ratio)
+                pixmap = pixmap.scaled(width, height)
+                pixmap.transformed(PyQt5.QtGui.QTransform(-(width / 2), -(height / 2)))
+                renderView.scene().addPixmap(pixmap)
+    except Exception as err:
+        event('error\u2588{}'.format(err))
 
 applicationRunning = True
 
@@ -58,7 +75,7 @@ window_header_bar_widgets_file = window_header_bar.addMenu('File')
 window_header_bar_widgets_file.setGeometry(0, 0, 40, 20)
 window_header_bar_widgets_file.setStyleSheet(window_header_bar_widgetStyleSheet)
 window_header_bar_widgets_file.addAction('New/Clear').triggered.connect(lambda: event('canvasClear'))
-window_header_bar_widgets_file.addAction('Open Image').triggered.connect(lambda: event('canvasOpenFile'))
+window_header_bar_widgets_file.addAction('Open Image').triggered.connect(lambda: event('canvasOpenImage'))
 window_header_bar_widgets_file.addAction('Exit').triggered.connect(lambda: event('exitProgram'))
 
 window_header_bar_widgets_edit = window_header_bar.addMenu('Edit')
