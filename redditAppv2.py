@@ -123,6 +123,7 @@ def saveFile(filename):
     shutil.copyfile((filename), ('C:\\Users\\{}\\Pictures\\{}'.format(os.getlogin(), filename.split('/')[filename.count('/')])))
 
 def loadFromSubreddit(subreddit, limit):
+    event('setWindowTitle\u2588{} - Loading...'.format(app.defaultTitle))
     images = retriveImagesFromSubreddit(subreddit, limit = limit)
     for url in images:
         try:
@@ -130,6 +131,7 @@ def loadFromSubreddit(subreddit, limit):
             addImageToScreen(img, title = url.title, nativeUrl = url.url)
         except Exception as err:
             pass
+    event('setWindowTitle\u2588{} - r/{}'.format(app.defaultTitle, subreddit))
 
 window = QWidget()
 window.setWindowTitle('Reddit App V2')
@@ -191,12 +193,32 @@ scrollContent.setLayout(scrollLayout)
 scroll.setWidget(scrollContent)
 scroll.resize(app.mainContentAreaWidth, 500)
 scroll.move(0, windowTopBorder.height())
-scroll.setStyleSheet('QScrollArea{border:none;}')
+scroll.setStyleSheet('QScrollArea{border:none;border-right:2px solid black;}')
 
 sidebarDiv = QWidget(window)
 sidebarDiv.resize((window.width() - app.mainContentAreaWidth), window.height())
 sidebarDiv.setStyleSheet('QWidget{background-color:transparent;}')
 sidebarDiv.move(app.mainContentAreaWidth, windowTopBorder.height())
+
+sidebarDivButtonSS = '''
+QToolButton{background-color:#a8a8a8;color:black;font-size:15px;border:2px solid black;}
+QToolButton:hover{background-color:white;color:black;font-size:15px;border:2px solid #00665f;}
+QPlainTextEdit{background-color:#a8a8a8;color:black;font-size:15px;border:2px solid black;}
+QPlainTextEdit:hover{background-color:white;color:black;font-size:15px;border:2px solid #00665f;}
+'''
+
+loadMoreButton = QToolButton(sidebarDiv)
+loadMoreButton.setText('Click here to load\nmore images from:')
+loadMoreButton.setStyleSheet(sidebarDivButtonSS)
+loadMoreButton.move(0, 0)
+loadMoreButton.setFixedWidth(170)
+loadMoreButton.setFixedHeight(50)
+loadMoreButton.clicked.connect(lambda: loadFromSubreddit(loadMoreEntry.toPlainText(), 5))
+
+loadMoreEntry = QPlainTextEdit(sidebarDiv)
+loadMoreEntry.resize(loadMoreButton.width(), loadMoreButton.height())
+loadMoreEntry.move(loadMoreButton.width(), 0)
+loadMoreEntry.setStyleSheet(sidebarDivButtonSS)
 
 def resizeThread():
     while (app.applicationRunning):
