@@ -127,7 +127,8 @@ def loadFromSubreddit(subreddit, limit):
     images = retriveImagesFromSubreddit(subreddit, limit = limit)
     for url in images:
         try:
-            img = getImage(url.url)
+            if (url.url not in app.loadedImageURLs):
+                img = getImage(url.url)
             addImageToScreen(img, title = url.title, nativeUrl = url.url)
         except Exception as err:
             pass
