@@ -12,7 +12,7 @@ application = QApplication(sys.argv)
 screen = application.primaryScreen()
 
 class reddit():
-    reddit_bot = praw.Reddit(user_agent = 'katznbot', client_id = '_CIuAjxI8TaKvg', client_secret = 'HnpYVUD2jouM--6OdFzdFNJ_g2E', username = 'katznbot', password = '')
+    reddit_bot = praw.Reddit(user_agent = 'katznbot', client_id = '_CIuAjxI8TaKvg', client_secret = 'HnpYVUD2jouM--6OdFzdFNJ_g2E', username = 'katznbot', password = '') #this can be public, its just a reddit bot.
     subreddit = 'all'
 
 class app():
@@ -23,6 +23,9 @@ class app():
 
 if ('tmp' not in os.listdir('.')):
     os.mkdir('tmp')
+
+for file in os.listdir('./tmp'):
+    os.remove('./tmp/' + file)
 
 def event(e):
     e = str(e)
@@ -52,10 +55,22 @@ class headerMonitoring():
         y_w = headerMonitoring.offset.y()
         window.move((x - x_w), (y - y_w))
 
+def getImage(url):
+    url = str(url)
+    imagefilename = str(url).split('/')[(url.count('/'))]
+    imagefilename = imagefilename.split(':')[(imagefilename.count(':'))]
+    fp = './tmp/' + imagefilename
+    imageContents = urllib.request.urlopen(url)
+    image = open(('./tmp/' + imagefilename), 'wb')
+    image.write(imageContents.read())
+    image.close()
+    return fp
+
+print (getImage('http://www.katznboyz.com/images/favicon.ico'))
+
 window = QWidget()
 window.setWindowTitle('Reddit App V2')
 window.setStyleSheet('QWidget{background-color:#2b2b2b;}')
-window.setMinimumSize(500, 300)
 window.setWindowIcon(PyQt5.QtGui.QIcon('paint_application_icon.png'))
 window.resize((screen.size().width() / 2), (screen.size().height() / 2))
 window.setWindowFlags(PyQt5.QtCore.Qt.CustomizeWindowHint) 
@@ -118,6 +133,8 @@ def resizeThread():
 
 event('setWindowTitle\u2588Reddit App V2')
 
+window.setMinimumSize(contentFeedArea.width(), 300)
+
 thread.start_new_thread(resizeThread, ())
 
 window.show()
@@ -125,3 +142,6 @@ window.show()
 application.exec_()
 
 applicationRunning = False
+
+for file in os.listdir('./tmp'):
+    os.remove('./tmp/' + file)
