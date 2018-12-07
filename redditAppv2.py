@@ -20,6 +20,8 @@ class app():
     loadedImageURLs = []
     previousLoadCounts = {}
     windowState = 'min'
+    defaultTitle = 'Reddit App V2'
+    mainContentAreaWidth = 600
 
 if ('tmp' not in os.listdir('.')):
     os.mkdir('tmp')
@@ -64,9 +66,70 @@ def getImage(url):
     image = open(('./tmp/' + imagefilename), 'wb')
     image.write(imageContents.read())
     image.close()
+    app.loadedImageURLs.append(url)
     return fp
 
-print (getImage('http://www.katznboyz.com/images/favicon.ico'))
+def retriveImagesFromSubreddit(subreddit, limit = 5):
+    if (subreddit not in app.previousLoadCounts):
+        app.previousLoadCounts[subreddit] = limit
+    else:
+        limit += app.previousLoadCounts[subreddit]
+    retrivedUrls = reddit.reddit_bot.subreddit(subreddit).new(limit = limit)
+    return retrivedUrls
+
+def addImageToScreen(filepath, title = '', nativeUrl = 'about:blank'):
+    global scrollLayout
+    pic = QLabel()
+    pic.resize(300, 300)
+    pixmap = PyQt5.QtGui.QPixmap(filepath)
+    try:
+        img_aspect_ratio = (float(pixmap.size().width()) / pixmap.size().height())
+    except:
+        img_aspect_ratio = 1.8
+    width = app.mainContentAreaWidth - 20
+    height = (app.mainContentAreaWidth / img_aspect_ratio)
+    pixmap = pixmap.scaled(width, height)
+    pic.setPixmap(pixmap)
+    pic.resize(width, height)
+    pic.setStyleSheet('QLabel{background-color:white;}')
+    scrollLayout.addWidget(pic)
+    postOptionsLayout = QWidget()
+    lbss = '''
+QPushButton{background-color:lightgray;color:black;border:1px solid black;font-family:Verdana;font-size:13px;margin:0px;}
+QPushButton:hover{background-color:white;color:black;border:1px solid black;font-family:Verdana;font-size:13px;margin:0px;}
+'''
+    l1 = QHBoxLayout()
+    l1_b1 = QPushButton()
+    l1_b1.setText('Save')
+    l1_b1.setStyleSheet(lbss)
+    l1_b1.setFixedSize((app.mainContentAreaWidth / 3.5), 25)
+    l1_b1.clicked.connect(lambda: saveFile(filepath))
+    l1.addWidget(l1_b1)
+    l1_b2 = QPushButton()
+    l1_b2.setText('View in browser')
+    l1_b2.setStyleSheet(lbss)
+    l1_b2.setFixedSize((app.mainContentAreaWidth / 3.5), 25)
+    l1_b2.clicked.connect(lambda: os.startfile(nativeUrl))
+    l1.addWidget(l1_b2)
+    l1_b3 = QPushButton()
+    l1_b3.setText('Share')
+    l1_b3.setStyleSheet(lbss)
+    l1_b3.setFixedSize((app.mainContentAreaWidth / 3.5), 25)
+    l1.addWidget(l1_b3)
+    postOptionsLayout.setLayout(l1)
+    scrollLayout.addWidget(postOptionsLayout)
+
+def saveFile(filename):
+    shutil.copyfile((filename), ('C:\\Users\\{}\\Pictures\\{}'.format(os.getlogin(), filename.split('/')[filename.count('/')])))
+
+def loadFromSubreddit(subreddit, limit):
+    images = retriveImagesFromSubreddit(subreddit, limit = limit)
+    for url in images:
+        try:
+            img = getImage(url.url)
+            addImageToScreen(img, title = url.title, nativeUrl = url.url)
+        except Exception as err:
+            pass
 
 window = QWidget()
 window.setWindowTitle('Reddit App V2')
@@ -117,11 +180,15 @@ QPushButton:hover{background-color:#6b6a6a;color:white;font-family:Courier;}
 ''')
 minimizeButton.clicked.connect(lambda: event('minimizeWindow'))
 
-contentFeedArea = QWidget(window)
-contentFeedArea.move(0, windowTopBorder.height())
-contentFeedArea.resize(500, (window.height() - windowTopBorder.height()))
-contentFeedArea.setStyleSheet('QWidget{background-color:transparent;border-right:2px solid black;}')
-#contentFeedArea.setLayout(layout)
+scroll = QScrollArea(window)
+scroll.setWidgetResizable(True)
+scrollContent = QWidget(scroll)
+scrollLayout = QVBoxLayout(scrollContent)
+scrollContent.setLayout(scrollLayout)
+scroll.setWidget(scrollContent)
+scroll.resize(app.mainContentAreaWidth, 500)
+scroll.move(0, windowTopBorder.height())
+scroll.setStyleSheet('QScrollArea{border:none;border-right:2px solid black;}')
 
 def resizeThread():
     while (app.applicationRunning):
@@ -129,15 +196,17 @@ def resizeThread():
         toggleWindowStateButton.move((exitButton.x() - exitButton.width()), 0)
         minimizeButton.move((toggleWindowStateButton.x() - toggleWindowStateButton.width()), 0)
         windowTopBorder.resize(window.width(), 20)
-        contentFeedArea.resize(500, (window.height() - windowTopBorder.height()))
+        scroll.resize(app.mainContentAreaWidth, (window.height() - windowTopBorder.height()))
 
-event('setWindowTitle\u2588Reddit App V2')
+event('setWindowTitle\u2588{}'.format(app.defaultTitle))
 
-window.setMinimumSize(contentFeedArea.width(), 300)
+window.setMinimumSize(scroll.width(), 300)
 
 thread.start_new_thread(resizeThread, ())
 
 window.show()
+
+loadFromSubreddit('meow_irl', 5)
 
 application.exec_()
 
