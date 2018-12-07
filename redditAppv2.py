@@ -21,7 +21,7 @@ class app():
     previousLoadCounts = {}
     windowState = 'min'
     defaultTitle = 'Reddit App V2'
-    mainContentAreaWidth = 600
+    mainContentAreaWidth = 700
 
 if ('tmp' not in os.listdir('.')):
     os.mkdir('tmp')
@@ -148,7 +148,10 @@ windowTopBorder.mouseMoveEvent = lambda e: headerMonitoring.windowMove(e)
 windowTitle = QLabel(window)
 windowTitle.move(10, 0)
 windowTitle.setFixedHeight(20)
-windowTitle.setStyleSheet('QLabel{color:white;font-family:Calibri;background-color:transparent;}')
+windowTitle.setStyleSheet('QLabel{color:white;font-family:Calibri;background-color:transparent;qproperty-alignment:AlignCenter;}')
+windowTitle.mousePressEvent = lambda e: headerMonitoring.windowDrag(e)
+windowTitle.mouseMoveEvent = lambda e: headerMonitoring.windowMove(e)
+windowTitle.setFixedWidth(window.width())
 
 exitButton = QPushButton(window)
 exitButton.move((window.width() - exitButton.width()), 0)
@@ -188,7 +191,12 @@ scrollContent.setLayout(scrollLayout)
 scroll.setWidget(scrollContent)
 scroll.resize(app.mainContentAreaWidth, 500)
 scroll.move(0, windowTopBorder.height())
-scroll.setStyleSheet('QScrollArea{border:none;border-right:2px solid black;}')
+scroll.setStyleSheet('QScrollArea{border:none;}')
+
+sidebarDiv = QWidget(window)
+sidebarDiv.resize((window.width() - app.mainContentAreaWidth), window.height())
+sidebarDiv.setStyleSheet('QWidget{background-color:transparent;}')
+sidebarDiv.move(app.mainContentAreaWidth, windowTopBorder.height())
 
 def resizeThread():
     while (app.applicationRunning):
@@ -197,6 +205,8 @@ def resizeThread():
         minimizeButton.move((toggleWindowStateButton.x() - toggleWindowStateButton.width()), 0)
         windowTopBorder.resize(window.width(), 20)
         scroll.resize(app.mainContentAreaWidth, (window.height() - windowTopBorder.height()))
+        windowTitle.setFixedWidth(window.width())
+        sidebarDiv.resize((window.width() - app.mainContentAreaWidth), window.height())
 
 event('setWindowTitle\u2588{}'.format(app.defaultTitle))
 
@@ -205,8 +215,7 @@ window.setMinimumSize(scroll.width(), 300)
 thread.start_new_thread(resizeThread, ())
 
 window.show()
-
-loadFromSubreddit('meow_irl', 5)
+window.resize(app.mainContentAreaWidth, 500)
 
 application.exec_()
 
