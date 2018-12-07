@@ -38,6 +38,8 @@ def event(e):
         else:
             window.showNormal()
             app.windowState = 'min'
+    elif (e.split('\u2588')[0] == 'setWindowTitle'):
+        windowTitle.setText(e.split('\u2588')[1])
 
 class headerMonitoring():
     offset = None
@@ -69,7 +71,6 @@ windowTitle = QLabel(window)
 windowTitle.move(10, 0)
 windowTitle.setFixedHeight(20)
 windowTitle.setStyleSheet('QLabel{color:white;font-family:Calibri;background-color:transparent;}')
-windowTitle.setText('Reddit App V2')
 
 exitButton = QPushButton(window)
 exitButton.move((window.width() - exitButton.width()), 0)
@@ -101,12 +102,21 @@ QPushButton:hover{background-color:#6b6a6a;color:white;font-family:Courier;}
 ''')
 minimizeButton.clicked.connect(lambda: event('minimizeWindow'))
 
+contentFeedArea = QWidget(window)
+contentFeedArea.move(0, windowTopBorder.height())
+contentFeedArea.resize(500, (window.height() - windowTopBorder.height()))
+contentFeedArea.setStyleSheet('QWidget{background-color:transparent;border-right:2px solid black;}')
+#contentFeedArea.setLayout(layout)
+
 def resizeThread():
     while (app.applicationRunning):
         exitButton.move((window.width() - exitButton.width()), 0)
         toggleWindowStateButton.move((exitButton.x() - exitButton.width()), 0)
         minimizeButton.move((toggleWindowStateButton.x() - toggleWindowStateButton.width()), 0)
         windowTopBorder.resize(window.width(), 20)
+        contentFeedArea.resize(500, (window.height() - windowTopBorder.height()))
+
+event('setWindowTitle\u2588Reddit App V2')
 
 thread.start_new_thread(resizeThread, ())
 
