@@ -277,7 +277,7 @@ window.setMinimumSize(scroll.width(), 300)
 thread.start_new_thread(resizeThread, ())
 
 window.show()
-window.resize(app.mainContentAreaWidth, 500)
+window.resize((app.mainContentAreaWidth + loadAmntButton.width() + loadAmntEntry.width()), 500)
 
 application.exec_()
 
