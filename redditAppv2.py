@@ -86,7 +86,7 @@ def retriveImagesFromSubreddit(subreddit, limit = 5):
     retrivedUrls = reddit.reddit_bot.subreddit(subreddit).new(limit = limit)
     return retrivedUrls
 
-def addImageToScreen(filepath, title = '', nativeUrl = 'about:blank'):
+def addImageToScreen(filepath, title = 'Error loading post.', nativeUrl = 'about:blank'):
     global scrollLayout
     pic = QLabel()
     pic.resize(300, 300)
@@ -100,8 +100,13 @@ def addImageToScreen(filepath, title = '', nativeUrl = 'about:blank'):
     pixmap = pixmap.scaled(width, height)
     pic.setPixmap(pixmap)
     pic.resize(width, height)
-    pic.setStyleSheet('QLabel{background-color:white;}')
+    pic.setStyleSheet('QLabel{background-color:transparent;}')
     scrollLayout.addWidget(pic)
+    imgTitle = QLabel()
+    imgTitle.setWordWrap(True)
+    imgTitle.setText(title)
+    imgTitle.setStyleSheet('QLabel{background-color:transparent;color:white;font-size:14px;}')
+    scrollLayout.addWidget(imgTitle)
     postOptionsLayout = QWidget()
     lbss = '''
 QPushButton{background-color:lightgray;color:black;border:1px solid black;font-family:Verdana;font-size:13px;margin:0px;}
@@ -132,6 +137,7 @@ def saveFile(filename):
     shutil.copyfile((filename), ('C:\\Users\\{}\\Pictures\\{}'.format(os.getlogin(), filename.split('/')[filename.count('/')])))
 
 def loadFromSubreddit(subreddit, limit):
+    sla(loadAmntEntry.toPlainText())
     event('setWindowTitle\u2588{} - Loading...'.format(app.defaultTitle))
     images = retriveImagesFromSubreddit(subreddit, limit = limit)
     for url in images:
@@ -248,7 +254,7 @@ loadAmntButton.setStyleSheet(sidebarDivButtonSS)
 loadAmntButton.move(0, (loadMoreButton.height()))
 loadAmntButton.setFixedWidth(170)
 loadAmntButton.setFixedHeight(50)
-loadAmntButton.clicked.connect(lambda: sla(loadMoreEntry.toPlainText()))
+loadAmntButton.clicked.connect(lambda: sla(loadAmntEntry.toPlainText()))
 
 loadAmntEntry = QPlainTextEdit(sidebarDiv)
 loadAmntEntry.resize(loadMoreButton.width(), loadMoreButton.height())
