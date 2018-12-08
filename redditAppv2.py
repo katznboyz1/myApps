@@ -129,9 +129,11 @@ QPushButton:hover{background-color:white;color:black;border:1px solid black;font
     l1_b3.setText('Share')
     l1_b3.setStyleSheet(lbss)
     l1_b3.setFixedSize((app.mainContentAreaWidth / 3.5), 25)
+    l1_b3.clicked.connect(lambda: event(('error\u2588This button does not work in the current version of this app.')))
     l1.addWidget(l1_b3)
     postOptionsLayout.setLayout(l1)
     scrollLayout.addWidget(postOptionsLayout)
+    window.update() #doesnt update window ;-;
 
 def saveFile(filename):
     shutil.copyfile((filename), ('C:\\Users\\{}\\Pictures\\{}'.format(os.getlogin(), filename.split('/')[filename.count('/')])))
