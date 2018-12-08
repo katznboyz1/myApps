@@ -22,6 +22,7 @@ class app():
     windowState = 'min'
     defaultTitle = 'Reddit App V2'
     mainContentAreaWidth = 700
+    loadAmount = 5
 
 if ('tmp' not in os.listdir('.')):
     os.mkdir('tmp')
@@ -45,6 +46,12 @@ def event(e):
             app.windowState = 'min'
     elif (e.split('\u2588')[0] == 'setWindowTitle'):
         windowTitle.setText(e.split('\u2588')[1])
+    elif (e.split('\u2588')[0] == 'error'):
+        err = e.split('\u2588')[1]
+        errorDialog = QErrorMessage(errWidget)
+        errorDialog.showMessage(err)
+        errorDialog.setWindowTitle('{} - Error'.format(app.defaultTitle))
+        errorDialog.setStyleSheet('QErrorMessage{color:white;}')
 
 class headerMonitoring():
     offset = None
@@ -134,12 +141,23 @@ def loadFromSubreddit(subreddit, limit):
             pass
     event('setWindowTitle\u2588{} - r/{}'.format(app.defaultTitle, subreddit))
 
+def sla(amount):
+    try:
+        amount = int(amount)
+        app.loadAmount = amount
+    except Exception as err:
+        event('error\u2588{}'.format(err))
+
 window = QWidget()
 window.setWindowTitle('Reddit App V2')
 window.setStyleSheet('QWidget{background-color:#2b2b2b;}')
 window.setWindowIcon(PyQt5.QtGui.QIcon('paint_application_icon.png'))
 window.resize((screen.size().width() / 2), (screen.size().height() / 2))
 window.setWindowFlags(PyQt5.QtCore.Qt.CustomizeWindowHint) 
+
+errWidget = QWidget(window)
+errWidget.resize(0, 0)
+errWidget.setStyleSheet('QWidget{background-color:white;}')
 
 windowTopBorder = QWidget(window)
 windowTopBorder.resize(window.width(), 20)
@@ -214,12 +232,27 @@ loadMoreButton.setStyleSheet(sidebarDivButtonSS)
 loadMoreButton.move(0, 0)
 loadMoreButton.setFixedWidth(170)
 loadMoreButton.setFixedHeight(50)
-loadMoreButton.clicked.connect(lambda: loadFromSubreddit(loadMoreEntry.toPlainText(), 5))
+loadMoreButton.clicked.connect(lambda: loadFromSubreddit(loadMoreEntry.toPlainText(), app.loadAmount))
 
 loadMoreEntry = QPlainTextEdit(sidebarDiv)
 loadMoreEntry.resize(loadMoreButton.width(), loadMoreButton.height())
 loadMoreEntry.move(loadMoreButton.width(), 0)
 loadMoreEntry.setStyleSheet(sidebarDivButtonSS)
+loadMoreEntry.setPlainText('aviation')
+
+loadAmntButton = QToolButton(sidebarDiv)
+loadAmntButton.setText('Click here to set\nimage load amount:')
+loadAmntButton.setStyleSheet(sidebarDivButtonSS)
+loadAmntButton.move(0, (loadMoreButton.height()))
+loadAmntButton.setFixedWidth(170)
+loadAmntButton.setFixedHeight(50)
+loadAmntButton.clicked.connect(lambda: sla(loadMoreEntry.toPlainText()))
+
+loadAmntEntry = QPlainTextEdit(sidebarDiv)
+loadAmntEntry.resize(loadMoreButton.width(), loadMoreButton.height())
+loadAmntEntry.move(loadMoreButton.width(), (loadAmntButton.y()))
+loadAmntEntry.setStyleSheet(sidebarDivButtonSS)
+loadAmntEntry.setPlainText(str(app.loadAmount))
 
 def resizeThread():
     while (app.applicationRunning):
