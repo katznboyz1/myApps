@@ -161,7 +161,7 @@ def sla(amount):
 window = QWidget()
 window.setWindowTitle('Reddit App V2')
 window.setStyleSheet('QWidget{background-color:#2b2b2b;}')
-window.setWindowIcon(PyQt5.QtGui.QIcon('paint_application_icon.png'))
+window.setWindowIcon(PyQt5.QtGui.QIcon('reddit_application_icon.png'))
 window.resize((screen.size().width() / 2), (screen.size().height() / 2))
 window.setWindowFlags(PyQt5.QtCore.Qt.CustomizeWindowHint) 
 
