@@ -232,8 +232,8 @@ sidebarDiv.move(app.mainContentAreaWidth, windowTopBorder.height())
 sidebarDivButtonSS = '''
 QToolButton{background-color:#a8a8a8;color:black;font-size:15px;border:2px solid black;}
 QToolButton:hover{background-color:white;color:black;font-size:15px;border:2px solid #00665f;}
-QPlainTextEdit{background-color:#a8a8a8;color:black;font-size:15px;border:2px solid black;}
-QPlainTextEdit:hover{background-color:white;color:black;font-size:15px;border:2px solid #00665f;}
+QPlainTextEdit{background-color:#a8a8a8;color:black;font-size:14px;border:2px solid black;}
+QPlainTextEdit:hover{background-color:white;color:black;font-size:14px;border:2px solid #00665f;}
 '''
 
 loadMoreButton = QToolButton(sidebarDiv)
