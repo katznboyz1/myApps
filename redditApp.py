@@ -197,7 +197,8 @@ QPushButton:hover{background-color:white;color:black;border:1px solid black;font
             else:
                 utils.queryImages((previousLoadAmounts[subreddit_current]) + amount, subreddit_current)
         except:
-            print ('Error retriving photos. (Did I spell that right?)')
+            print ('Error')
+            utils.consolelog('\u2588\u2588 Error getting photos. \u2588\u2588')
 
 window.show()
 
